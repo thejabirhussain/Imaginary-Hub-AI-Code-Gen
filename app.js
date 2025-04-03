@@ -54,7 +54,6 @@ app.use(session({
 }));
 
 // Initialize Google Cloud Vision client with explicit credentials
-const vision = require('@google-cloud/vision');
 const visionCredentials = JSON.parse(process.env.GOOGLE_CLOUD_VISION_CREDENTIALS);
 const client = new vision.ImageAnnotatorClient({
     credentials: visionCredentials
