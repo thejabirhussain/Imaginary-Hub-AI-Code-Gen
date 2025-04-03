@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polymet - Saved Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f9f5f2;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 250px;
+            background: #ffffff;
+            padding: 20px;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            transition: width 0.3s ease;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .sidebar-logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        .sidebar-logo span {
+            font-weight: 700;
+            color: #333;
+            font-size: 18px;
+        }
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        .sidebar-section h3 {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+        .sidebar-menu li a {
+            text-decoration: none;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .sidebar-menu li a:hover {
+            background-color: #f5f5f5;
+            color: #ff6200;
+        }
+        .sidebar-menu li a.active {
+            background-color: #ffe5d6;
+            color: #ff6200;
+            font-weight: 600;
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f9f5f2;
+            overflow-y: auto;
+        }
+        .topbar {
+            background: #ffffff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .topbar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .topbar-user span {
+            font-size: 14px;
+            color: #333;
+        }
+        .topbar-user-avatar {
+            width: 36px;
+            height: 36px;
+            background: #ff6200;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .project-card h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        .project-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .code-container {
+            margin-bottom: 10px;
+        }
+        .code-container pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #cc0000, #ff4444);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 68, 68, 0.3);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar-logo span,
+            .sidebar-section h3,
+            .sidebar-menu li a span {
+                display: none;
+            }
+            .topbar-user span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <!-- <img src="/api/placeholder/30/30" alt="Polymet Logo"> -->
+            <span>Imaginary Hub</span>
+        </div>
+        <div class="sidebar-section">
+            <h3>Design</h3>
+            <ul class="sidebar-menu">
+                <li><a href="#"><span>Components</span></a></li>
+                <li><a href="#"><span>Font</span></a></li>
+                <li><a href="#"><span>Mode</span></a></li>
+                <li><a href="#"><span>Radius</span></a></li>
+                <li><a href="#"><span>Color</span></a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <h3>Pages</h3>
+            <ul class="sidebar-menu">
+                <li><a href="/dashboard"><span>Home</span></a></li>
+                <li><a href="/project-savee" class="active"><span>Saved Projects</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-title">Saved Projects</div>
+            <div class="topbar-user">
+                <span><%= user.email %></span>
+                <div class="topbar-user-avatar"><%= user.email.charAt(0).toUpperCase() %></div>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="projects-grid">
+                <% if (projects && projects.length > 0) { %>
+                    <% projects.forEach(project => { %>
+                        <div class="project-card">
+                            <h4><%= project.language %> Project</h4>
+                            <p><strong>Prompt:</strong> <%= project.prompt %></p>
+                            <div class="code-container">
+                                <pre><code class="language-<%= project.language.toLowerCase().replace('/', '-') %>"><%= project.generatedCode %></code></pre>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No saved projects found. Start by generating some code on the dashboard!</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script>
+        // Highlight code after the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>

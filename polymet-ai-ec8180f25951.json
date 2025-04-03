@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "polymet-ai",
+  "private_key_id": "ec8180f25951e4e34b3444588df62b8fa6e4ac66",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC47vpvXDJpAyUN\nOcpvTFz8Avj1ATtN9CyzMqMp5b5lqH/1XnbV0Vryr1+uQl0cwPKlIXOBt/ZHrtED\nGoO5FOc0V1dVgcfHeMjh39H8V1I5rppZVBjSNMSzoMvmFyj3j70e5L5/szEAqDXi\nn/WdF+kz06MEZoAGKvclSJt+RzCI7cFG0HPwTKIzDsLqt9rcvlcKVSjVnKOxYUtT\nXdCaMmbUXdka800Q9BXBdX4erx2ATQ+I7a6fs3x8H8uBsNgBMyv13gH+AGGSEi23\nH90veYqWKoRKmblpLu3yub6h2WCHm3S9uwDP0HfOEldhClHRkr3/OyfFaL4lYyBX\nL8JoGlU7AgMBAAECggEAV3pPw0p42/ytU57BF7mnCFx9mCNvgpXcaR2sWb6/vAWj\nFZWMH+NKop57Y4on0ligzqTOpw82c70JSG8L3Qo6vaMNADkGH+COIW5GvZcuoXNq\ntpOVtCVa4F9Q4/OToNsAyjLIu84vAVEQQDWLMLalTKsxIv07VO+Q/bVlPCv/lN0X\n0Lx2fbnMN+wgAbAgTo43iilRygn5wsqU5OxCu0wj08wQHyVezxJ8e65vuIxv5M1K\nFXvKu6MOB34PoJhOBJNOJOmoOEd3Ml+K+wck/4mZ823Ji1J/O/mM7AU9eeZj2DxM\nrTbmpxowURaRzIeRIpdHH2tkUSH/acfLsuPYJuvB/QKBgQDqjC0Ou4k5nO2imdhK\nRgBIrKus8/n/jQpTnq5wJHZjPWrX5k1zyqbbsYXjLaCd9GIk3TAHv8rmoGj1sR/J\n97GwpUfrMAEmNmPwoVvXUk8rXhdkkTQMlOQOa0O8zlE3slvnYZCtyqESyh1vP89F\nos6o6eRXaTXd/o8gHeJwswDffwKBgQDJ2Ryi65IldLX53UkzRt8ag6hvgQDBHNnf\n+xDuO0ktnnCphW5eQbZCTFOuBpzXNfWWPVEZfK/mzVcsohh+AvRfWxNT6OZZ1dnB\nRwPV+pNH4tFe0FumRt5xeJIRTwrwNzC0hN43VvK+sK9DsWP1zFpPErNZr2paHFr3\n+xtoay3oRQKBgDSxBxJPOTXTNmOYEkolTb0F5Y92RAyQH+jHNkMFPf9vdchI+c9w\nkGm8iOqPfozdsQq9EiQ7hxampM3FW/Hgjm+zweNpJmjyQSN27I4D9Ls2aSTzpfDJ\npi5DFLWe2AoeLJ1fgsQ4SFVTSKeMe0EWoTy7RswIW8yien7pl8xfumt7AoGAKOH6\ntNz12vRKr3MskmA2bA5inUMJvhNz5bPaeAY2CjFfLFbERf8VRVRkVoksV0KsnWOJ\n+5mPnzXUBExIna1HhdDSl1pC3cs8sbMKidqY3iSIt6WICqOsBlufajYSRxlGmimX\nQKoxvIHY3eMeFfjwCbgF75Jh/iJkInoP0RR0VekCgYEAnB4BbEuTFJrEcP75V5An\nSvD0vu8mQLBLQfBK/J5gt981RNWWBxbKsUyINJNXD3uz2NyUMqSSciScFGrz0Wl5\nGZ2o+psvNKwOZqBGFSZzISmNpgDj7qg8sGgPT64sqZkrVLrjTBD6iDheFs/jiqWg\nQM9agWc2BqcRb1JL/jhsUuI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "polymet-vision@polymet-ai.iam.gserviceaccount.com",
+  "client_id": "105512773894784658622",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/polymet-vision%40polymet-ai.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

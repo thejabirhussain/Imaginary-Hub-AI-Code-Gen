@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polymet - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f9f5f2;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 250px;
+            background: #ffffff;
+            padding: 20px;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            transition: width 0.3s ease;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .sidebar-logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        .sidebar-logo span {
+            font-weight: 700;
+            color: #333;
+            font-size: 18px;
+        }
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        .sidebar-section h3 {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+        .sidebar-menu li a {
+            text-decoration: none;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .sidebar-menu li a:hover {
+            background-color: #f5f5f5;
+            color: #ff6200;
+        }
+        .sidebar-menu li a.active {
+            background-color: #ffe5d6;
+            color: #ff6200;
+            font-weight: 600;
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f9f5f2;
+            overflow-y: auto;
+        }
+        .topbar {
+            background: #ffffff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .topbar-tabs {
+            display: flex;
+            gap: 15px;
+        }
+        .topbar-tabs a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .topbar-tabs a.active {
+            background-color: #ffe5d6;
+            color: #ff6200;
+        }
+        .topbar-tabs a:hover {
+            background-color: #f5f5f5;
+        }
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .topbar-user span {
+            font-size: 14px;
+            color: #333;
+        }
+        .topbar-user-avatar {
+            width: 36px;
+            height: 36px;
+            background: #ff6200;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .content-templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .template-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .template-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .template-card-header span {
+            background: #f0f0f0;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .template-card h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        .prompt-area {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .prompt-area-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .prompt-area-input select, 
+        .prompt-area-input textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        .prompt-area-input select:focus,
+        .prompt-area-input textarea:focus {
+            border-color: #ff6200;
+            outline: none;
+        }
+        .prompt-area-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6200, #e55b00);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e55b00, #ff6200);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 98, 0, 0.3);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            color: #666;
+        }
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e0e0e0, #f0f0f0);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #cc0000, #ff4444);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 68, 68, 0.3);
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #00c4b4, #009688);
+            color: white;
+        }
+        .btn-info:hover {
+            background: linear-gradient(135deg, #009688, #00c4b4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 196, 180, 0.3);
+        }
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .result-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-2px);
+        }
+        .result-card h4 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        .result-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .code-container {
+            margin-bottom: 10px;
+        }
+        .code-container pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .result-card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .error {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6200;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .image-preview {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .image-preview img {
+            max-width: 200px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .feedback-form select, .feedback-form textarea {
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .feedback-form button {
+            align-self: flex-start;
+        }
+        .feedback-display {
+            font-size: 14px;
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .content-templates {
+                grid-template-columns: 1fr;
+            }
+            .prompt-area-input {
+                flex-direction: column;
+            }
+        }
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar-logo span,
+            .sidebar-section h3,
+            .sidebar-menu li a span {
+                display: none;
+            }
+            .topbar-tabs {
+                gap: 10px;
+            }
+            .topbar-user span {
+                display: none;
+            }
+            .result-card-actions {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <!-- <img src="/api/placeholder/30/30" alt="Polymet Logo"> -->
+            <span>Imaginary Hub</span>
+        </div>
+        <div class="sidebar-section">
+            <h3>Design</h3>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><span>Components</span></a></li>
+                <li><a href="#"><span>Font</span></a></li>
+                <li><a href="#"><span>Mode</span></a></li>
+                <li><a href="#"><span>Radius</span></a></li>
+                <li><a href="#"><span>Color</span></a></li>
+            </ul>
+        </div>
+        <div class="sidebar-section">
+            <h3>Pages</h3>
+            <ul class="sidebar-menu">
+                <li><a href="/dashboard" class="active"><span>Home</span></a></li>
+                <li><a href="/project-savee"><span>Saved Projects</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-tabs">
+                <a href="#" class="active">Page</a>
+                <a href="#">Component</a>
+            </div>
+            <div class="topbar-user">
+                <span><%= user.email %></span>
+                <div class="topbar-user-avatar"><%= user.email.charAt(0).toUpperCase() %></div>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-templates">
+                <div class="template-card" data-prompt="Create a login/signup flow for my food delivery platform" data-language="React">
+                    <div class="template-card-header">
+                        <span>Basic</span>
+                    </div>
+                    <h4>Create a login/signup flow for my food delivery platform</h4>
+                </div>
+                <div class="template-card" data-prompt="Create a property finder interface similar to the one in the image" data-language="HTML/CSS">
+                    <div class="template-card-header">
+                        <span>Basic</span>
+                    </div>
+                    <h4>Create a property finder interface similar to the one in the image</h4>
+                </div>
+                <div class="template-card" data-prompt="Create a beautiful blog page with a rounded featured blog post" data-language="Vue">
+                    <div class="template-card-header">
+                        <span>Intermediate</span>
+                    </div>
+                    <h4>Create a beautiful blog page with a rounded featured blog post</h4>
+                </div>
+                <div class="template-card" data-prompt="Create a dashboard for a treasury management software" data-language="React">
+                    <div class="template-card-header">
+                        <span>Intermediate</span>
+                    </div>
+                    <h4>Create a dashboard for a treasury management software</h4>
+                </div>
+                <div class="template-card" data-prompt="Create a finance dashboard with some charts and graphs" data-language="React">
+                    <div class="template-card-header">
+                        <span>Advanced</span>
+                    </div>
+                    <h4>Create a finance dashboard with some charts and graphs</h4>
+                </div>
+            </div>
+            <div class="prompt-area">
+                <form id="prompt-form">
+                    <div class="prompt-area-input">
+                        <select name="language">
+                            <option value="React">React</option>
+                            <option value="HTML/CSS">HTML/CSS</option>
+                            <option value="Vue">Vue</option>
+                        </select>
+                        <textarea name="prompt" placeholder="Explain what you want to build..." rows="3"></textarea>
+                    </div>
+                    <div class="prompt-area-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                            Generate
+                        </button>
+                        <button type="button" id="voice-btn" class="btn btn-info">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1v22M5 7v10M19 7v10M1 11h22M1 13h22" />
+                            </svg>
+                            Voice
+                        </button>
+                        <button type="button" id="image-btn" class="btn btn-info">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                            Image
+                        </button>
+                    </div>
+                </form>
+                <div id="error" class="error"></div>
+                <div class="loading-spinner" id="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <div class="image-preview" id="image-preview">
+                    <img id="preview-img" alt="Uploaded Image Preview">
+                </div>
+            </div>
+            <div class="results" id="results">
+                <% if (projects && projects.length > 0) { %>
+                    <% projects.forEach(project => { %>
+                        <div class="result-card" data-id="<%= project._id %>">
+                            <h4>Generated <%= project.language %> Code</h4>
+                            <p><strong>Prompt:</strong> <%= project.prompt %></p>
+                            <div class="code-container">
+                                <pre><code class="language-<%= project.language.toLowerCase().replace('/', '-') %>"><%= project.generatedCode %></code></pre>
+                            </div>
+                            <div class="result-card-actions">
+                                <button class="btn btn-secondary copy-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                    Copy
+                                </button>
+                                <button class="btn btn-info preview-btn" onclick="window.location.href='/preview/<%= project._id %>'">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    Preview
+                                </button>
+                                <button class="btn btn-secondary download-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="7 10 12 15 17 10" />
+                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                    Download
+                                </button>
+                                <button class="btn btn-info share-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="18" cy="5" r="3" />
+                                        <circle cx="6" cy="12" r="3" />
+                                        <circle cx="18" cy="19" r="3" />
+                                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                    </svg>
+                                    Share
+                                </button>
+                                <button class="btn btn-danger delete-btn" data-id="<%= project._id %>">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                    </svg>
+                                    Delete
+                                </button>
+                            </div>
+                            <div class="feedback-section">
+                                <% if (project.rating) { %>
+                                    <div class="feedback-display">
+                                        <strong>Rating:</strong> <%= project.rating %>/5<br>
+                                        <strong>Comments:</strong> <%= project.comments || 'None' %>
+                                    </div>
+                                <% } else { %>
+                                    <form class="feedback-form" data-id="<%= project._id %>">
+                                        <select name="rating" required>
+                                            <option value="">Rate (1-5)</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <textarea name="comments" placeholder="Optional comments..." rows="2"></textarea>
+                                        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                                    </form>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No projects found. Start by generating some code!</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script>
+        // Highlight code after the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            Prism.highlightAll();
+        });
+
+        // Template card click handler
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const prompt = card.getAttribute('data-prompt');
+                const language = card.getAttribute('data-language');
+                document.querySelector('textarea[name="prompt"]').value = prompt;
+                document.querySelector('select[name="language"]').value = language;
+            });
+        });
+
+        // Generate button handler
+        document.getElementById('prompt-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const prompt = form.prompt.value;
+            const language = form.language.value;
+            const errorDiv = document.getElementById('error');
+            const resultsDiv = document.getElementById('results');
+            const loadingSpinner = document.getElementById('loading-spinner');
+
+            if (!prompt || !language) {
+                errorDiv.textContent = 'Please enter a prompt and select a language';
+                errorDiv.style.color = '#ff0000';
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+            errorDiv.textContent = '';
+
+            try {
+                const response = await fetch('/generate-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, language }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Create the result card
+                    const resultCard = document.createElement('div');
+                    resultCard.className = 'result-card';
+                    resultCard.setAttribute('data-id', data.projectId);
+
+                    // Store the code and other data as a JSON string
+                    const cardData = {
+                        code: data.code,
+                        prompt: prompt,
+                        language: language,
+                        projectId: data.projectId
+                    };
+                    resultCard.setAttribute('data-card', JSON.stringify(cardData));
+
+                    // Create the heading
+                    const heading = document.createElement('h4');
+                    heading.textContent = `Generated ${language} Code`;
+                    resultCard.appendChild(heading);
+
+                    // Create the prompt paragraph
+                    const promptPara = document.createElement('p');
+                    const strong = document.createElement('strong');
+                    strong.textContent = 'Prompt: ';
+                    promptPara.appendChild(strong);
+                    promptPara.appendChild(document.createTextNode(prompt));
+                    resultCard.appendChild(promptPara);
+
+                    // Create the code container
+                    const codeContainer = document.createElement('div');
+                    codeContainer.className = 'code-container';
+                    const pre = document.createElement('pre');
+                    const code = document.createElement('code');
+                    code.className = `language-${language.toLowerCase().replace('/', '-')}`;
+                    code.textContent = data.code; // Use textContent to avoid HTML injection
+                    pre.appendChild(code);
+                    codeContainer.appendChild(pre);
+                    resultCard.appendChild(codeContainer);
+
+                    // Create the actions container
+                    const actionsContainer = document.createElement('div');
+                    actionsContainer.className = 'result-card-actions';
+
+                    // Create the Copy button
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'btn btn-secondary copy-btn';
+                    copyBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        Copy
+                    `;
+                    actionsContainer.appendChild(copyBtn);
+
+                    // Create the Preview button
+                    const previewBtn = document.createElement('button');
+                    previewBtn.className = 'btn btn-info preview-btn';
+                    previewBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        Preview
+                    `;
+                    previewBtn.onclick = () => {
+                        window.location.href = `/preview/${data.projectId}`;
+                    };
+                    actionsContainer.appendChild(previewBtn);
+
+                    // Create the Download button
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.className = 'btn btn-secondary download-btn';
+                    downloadBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Download
+                    `;
+                    actionsContainer.appendChild(downloadBtn);
+
+                    // Create the Share button
+                    const shareBtn = document.createElement('button');
+                    shareBtn.className = 'btn btn-info share-btn';
+                    shareBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                        </svg>
+                        Share
+                    `;
+                    actionsContainer.appendChild(shareBtn);
+
+                    // Create the Delete button
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-danger delete-btn';
+                    deleteBtn.setAttribute('data-id', data.projectId);
+                    deleteBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        Delete
+                    `;
+                    actionsContainer.appendChild(deleteBtn);
+
+                    resultCard.appendChild(actionsContainer);
+
+                    // Create the feedback section
+                    const feedbackSection = document.createElement('div');
+                    feedbackSection.className = 'feedback-section';
+                    const feedbackForm = document.createElement('form');
+                    feedbackForm.className = 'feedback-form';
+                    feedbackForm.setAttribute('data-id', data.projectId);
+
+                    const select = document.createElement('select');
+                    select.name = 'rating';
+                    select.required = true;
+                    const options = [
+                        { value: '', text: 'Rate (1-5)' },
+                        { value: '1', text: '1' },
+                        { value: '2', text: '2' },
+                        { value: '3', text: '3' },
+                        { value: '4', text: '4' },
+                        { value: '5', text: '5' }
+                    ];
+                    options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.text;
+                        select.appendChild(option);
+                    });
+
+                    const textarea = document.createElement('textarea');
+                    textarea.name = 'comments';
+                    textarea.placeholder = 'Optional comments...';
+                    textarea.rows = '2';
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.type = 'submit';
+                    submitBtn.className = 'btn btn-primary';
+                    submitBtn.textContent = 'Submit Feedback';
+
+                    feedbackForm.appendChild(select);
+                    feedbackForm.appendChild(textarea);
+                    feedbackForm.appendChild(submitBtn);
+                    feedbackSection.appendChild(feedbackForm);
+                    resultCard.appendChild(feedbackSection);
+
+                    // Insert the result card into the DOM
+                    resultsDiv.insertBefore(resultCard, resultsDiv.firstChild);
+                    Prism.highlightAll();
+                    errorDiv.textContent = 'Code generated successfully!';
+                    errorDiv.style.color = '#28a745';
+                } else {
+                    errorDiv.textContent = data.error || 'Failed to generate code';
+                    errorDiv.style.color = '#ff0000';
+                }
+            } catch (err) {
+                errorDiv.textContent = 'An error occurred while generating code';
+                errorDiv.style.color = '#ff0000';
+                console.error(err);
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        // Copy to Clipboard handler
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.copy-btn')) {
+                const btn = e.target.closest('.copy-btn');
+                const resultCard = btn.closest('.result-card');
+                const cardData = JSON.parse(resultCard.getAttribute('data-card'));
+                const code = cardData.code;
+
+                navigator.clipboard.writeText(code).then(() => {
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        btn.innerHTML = `
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            Copy
+                        `;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                });
+            }
+        });
+
+        // Download button handler
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.download-btn')) {
+                const btn = e.target.closest('.download-btn');
+                const resultCard = btn.closest('.result-card');
+                const cardData = JSON.parse(resultCard.getAttribute('data-card'));
+                const projectId = cardData.projectId;
+
+                window.location.href = `/download/${projectId}`;
+            }
+        });
+
+        // Share button handler
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.share-btn')) {
+                const btn = e.target.closest('.share-btn');
+                const resultCard = btn.closest('.result-card');
+                const cardData = JSON.parse(resultCard.getAttribute('data-card'));
+                const projectId = cardData.projectId;
+
+                // Generate the shareable link
+                const shareLink = `${window.location.origin}/share/${projectId}`;
+
+                // Copy the link to the clipboard
+                navigator.clipboard.writeText(shareLink).then(() => {
+                    btn.textContent = 'Link Copied!';
+                    setTimeout(() => {
+                        btn.innerHTML = `
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3" />
+                                <circle cx="6" cy="12" r="3" />
+                                <circle cx="18" cy="19" r="3" />
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                            </svg>
+                            Share
+                        `;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy share link:', err);
+                });
+            }
+        });
+
+        // Delete button handler
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.delete-btn')) {
+                const btn = e.target.closest('.delete-btn');
+                const projectId = btn.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this project?')) {
+                    try {
+                        const response = await fetch(`/delete-project/${projectId}`, {
+                            method: 'DELETE',
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            btn.closest('.result-card').remove();
+                            alert(data.message);
+                        } else {
+                            alert(data.error || 'Failed to delete project');
+                        }
+                    } catch (err) {
+                        alert('An error occurred while deleting the project');
+                        console.error(err);
+                    }
+                }
+            }
+        });
+
+        // Feedback form handler
+        document.addEventListener('submit', async (e) => {
+            if (e.target.closest('.feedback-form')) {
+                e.preventDefault();
+                const form = e.target.closest('.feedback-form');
+                const projectId = form.getAttribute('data-id');
+                const rating = form.querySelector('select[name="rating"]').value;
+                const comments = form.querySelector('textarea[name="comments"]').value;
+
+                try {
+                    const response = await fetch(`/submit-feedback/${projectId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ rating: parseInt(rating), comments }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        const feedbackSection = form.closest('.feedback-section');
+                        feedbackSection.innerHTML = ''; // Clear the form
+
+                        const feedbackDisplay = document.createElement('div');
+                        feedbackDisplay.className = 'feedback-display';
+
+                        const ratingStrong = document.createElement('strong');
+                        ratingStrong.textContent = 'Rating: ';
+                        feedbackDisplay.appendChild(ratingStrong);
+                        feedbackDisplay.appendChild(document.createTextNode(`${rating}/5`));
+                        feedbackDisplay.appendChild(document.createElement('br'));
+
+                        const commentsStrong = document.createElement('strong');
+                        commentsStrong.textContent = 'Comments: ';
+                        feedbackDisplay.appendChild(commentsStrong);
+                        feedbackDisplay.appendChild(document.createTextNode(comments || 'None'));
+
+                        feedbackSection.appendChild(feedbackDisplay);
+                        alert(data.message);
+                    } else {
+                        alert(data.error || 'Failed to submit feedback');
+                    }
+                } catch (err) {
+                    alert('An error occurred while submitting feedback');
+                    console.error(err);
+                }
+            }
+        });
+
+        // Voice button handler
+        document.getElementById('voice-btn').addEventListener('click', () => {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.start();
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    document.querySelector('textarea[name="prompt"]').value = transcript;
+                };
+                recognition.onerror = (event) => {
+                    document.getElementById('error').textContent = 'Voice recognition error: ' + event.error;
+                    document.getElementById('error').style.color = '#ff0000';
+                };
+            } else {
+                document.getElementById('error').textContent = 'Voice recognition not supported in this browser.';
+                document.getElementById('error').style.color = '#ff0000';
+            }
+        });
+
+        // Image button handler
+        document.getElementById('image-btn').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('image', file);
+
+                    // Show loading spinner and clear previous errors and preview
+                    const loadingSpinner = document.getElementById('loading-spinner');
+                    const errorDiv = document.getElementById('error');
+                    const imagePreview = document.getElementById('image-preview');
+                    const previewImg = document.getElementById('preview-img');
+                    loadingSpinner.style.display = 'block';
+                    errorDiv.textContent = '';
+                    imagePreview.style.display = 'none';
+
+                    // Display the image preview
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        previewImg.src = event.target.result;
+                        imagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+
+                    try {
+                        const response = await fetch('/upload-image', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            document.querySelector('textarea[name="prompt"]').value = data.prompt;
+                            if (data.geminiError) {
+                                errorDiv.textContent = data.geminiError;
+                                errorDiv.style.color = '#ff6200';
+                            } else {
+                                errorDiv.textContent = 'Image uploaded successfully! Prompt generated.';
+                                errorDiv.style.color = '#28a745';
+                            }
+                        } else {
+                            errorDiv.textContent = data.error || 'Failed to upload image';
+                            errorDiv.style.color = '#ff0000';
+                            imagePreview.style.display = 'none';
+                        }
+                    } catch (err) {
+                        errorDiv.textContent = 'An error occurred while uploading the image';
+                        errorDiv.style.color = '#ff0000';
+                        imagePreview.style.display = 'none';
+                        console.error(err);
+                    } finally {
+                        loadingSpinner.style.display = 'none';
+                    }
+                }
+            };
+            input.click();
+        });
+    </script>
+    <script>
+        // Add this script to make the design buttons functional
+        document.addEventListener('DOMContentLoaded', () => {
+            // Helper function to find menu item by text content
+            const findMenuItem = (text) => {
+                const items = document.querySelectorAll('.sidebar-menu li a');
+                for (let item of items) {
+                    if (item.textContent.includes(text)) {
+                        return item;
+                    }
+                }
+                return null;
+            };
+    
+            // Font selection functionality
+            const fontBtn = findMenuItem('Font');
+            if (fontBtn) {
+                fontBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const currentFont = document.body.style.fontFamily || "'Inter', Arial, sans-serif";
+                    const newFont = currentFont.includes('Inter') ? "'Courier New', monospace" : "'Inter', Arial, sans-serif";
+                    document.body.style.fontFamily = newFont;
+                    
+                    // Show feedback
+                    showFeedback(`Font changed to ${newFont.includes('Courier') ? 'monospace' : 'default'}`);
+                });
+            }
+    
+            // Mode (light/dark) toggle functionality
+            const modeBtn = findMenuItem('Mode');
+            if (modeBtn) {
+                modeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const isDark = document.body.classList.toggle('dark-mode');
+                    
+                    if (isDark) {
+                        // Dark mode styles
+                        document.body.style.backgroundColor = '#1a1a1a';
+                        document.body.style.color = '#f0f0f0';
+                        document.querySelectorAll('.sidebar, .topbar, .template-card, .prompt-area, .result-card').forEach(el => {
+                            el.style.backgroundColor = '#2a2a2a';
+                            el.style.color = '#f0f0f0';
+                            el.style.borderColor = '#444';
+                        });
+                    } else {
+                        // Light mode styles
+                        document.body.style.backgroundColor = '#f9f5f2';
+                        document.body.style.color = '#333';
+                        document.querySelectorAll('.sidebar, .topbar, .template-card, .prompt-area, .result-card').forEach(el => {
+                            el.style.backgroundColor = '';
+                            el.style.color = '';
+                            el.style.borderColor = '';
+                        });
+                    }
+                    
+                    // Show feedback
+                    showFeedback(`Switched to ${isDark ? 'dark' : 'light'} mode`);
+                });
+            }
+    
+            // Radius (border-radius) toggle functionality
+            const radiusBtn = findMenuItem('Radius');
+            if (radiusBtn) {
+                radiusBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sampleElement = document.querySelector('.template-card');
+                    const currentRadius = getComputedStyle(sampleElement).borderRadius || '12px';
+                    const newRadius = currentRadius === '12px' ? '0px' : '12px';
+                    
+                    // Apply to all elements with rounded corners
+                    document.querySelectorAll('.template-card, .prompt-area, .result-card, .btn, select, textarea').forEach(el => {
+                        el.style.borderRadius = newRadius;
+                    });
+                    
+                    // Show feedback
+                    showFeedback(`Border radius set to ${newRadius}`);
+                });
+            }
+    
+            // Color theme toggle functionality
+            const colorBtn = findMenuItem('Color');
+            if (colorBtn) {
+                colorBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const root = document.documentElement;
+                    const currentColor = getComputedStyle(root).getPropertyValue('--primary-color') || '#ff6200';
+                    const newColor = currentColor.trim() === '#ff6200' ? '#4a6bdf' : '#ff6200';
+                    
+                    // Update CSS variables
+                    root.style.setProperty('--primary-color', newColor);
+                    root.style.setProperty('--primary-color-light', newColor.replace(/\d+/g, num => Math.floor(num * 0.9)));
+                    
+                    // Update all elements using the primary color
+                    updatePrimaryColor(newColor);
+                    
+                    // Show feedback
+                    showFeedback(`Color theme changed to ${newColor === '#ff6200' ? 'orange' : 'blue'}`);
+                });
+            }
+    
+            // Helper function to update primary color elements
+            function updatePrimaryColor(color) {
+                const lightColor = color.replace(/\d+/g, num => Math.floor(num * 0.9));
+                
+                // Update buttons
+                document.querySelectorAll('.btn-primary').forEach(btn => {
+                    btn.style.background = `linear-gradient(135deg, ${color}, ${lightColor})`;
+                });
+                
+                // Update active/hover states
+                document.querySelectorAll('.sidebar-menu li a.active, .topbar-tabs a.active').forEach(el => {
+                    el.style.backgroundColor = color + '20'; // Add transparency
+                    el.style.color = color;
+                });
+                
+                document.querySelectorAll('.sidebar-menu li a:hover').forEach(el => {
+                    el.style.color = color;
+                });
+            }
+    
+            // Helper function to show feedback messages
+            function showFeedback(message) {
+                const errorDiv = document.getElementById('error');
+                errorDiv.textContent = message;
+                errorDiv.style.color = '#28a745';
+                setTimeout(() => errorDiv.textContent = '', 2000);
+            }
+    
+            // Initialize CSS variables if they don't exist
+            if (!getComputedStyle(document.documentElement).getPropertyValue('--primary-color')) {
+                document.documentElement.style.setProperty('--primary-color', '#ff6200');
+                document.documentElement.style.setProperty('--primary-color-light', '#e55b00');
+            }
+        });
+    </script>
+</body>
+</html>
